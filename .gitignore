@@ -6,7 +6,7 @@
 /view/
 /var/
 /t/
-/lib/Getperf/Command/Master/TTSP.pm
+/lib/Getperf/Command/Master/
 site_info.txt
 .pid
 .stdout
