@@ -1,6 +1,6 @@
 #!/bin/sh
 
-JAVA_HOME=/usr/java; export JAVA_HOME
+JAVA_HOME=/usr/lib/jvm/java; export JAVA_HOME
 CLASSPATH=.:"${JAVA_HOME}/lib/tools.jar"; export CLASSPATH
 BASEDIR=`dirname $0`; export BASEDIR
 TARGET_DIR="${BASEDIR}/lib"; export TARGET_DIR

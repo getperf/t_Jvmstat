@@ -17,7 +17,7 @@ sub read_java_vm_list {
     my ($self, $data_info) = @_;
 
     my $input_dir = $data_info->input_dir;
-	my $javavm_list_yaml = file($input_dir, 'jvm.txt')->slurp;
+	my $javavm_list_yaml = file($input_dir, 'java_vm_list.yaml')->slurp;
 	my $stat_yaml = YAML::Tiny->read_string($javavm_list_yaml);
 	my %jvms = ();
 	for my $java_info(@{$stat_yaml->[0]}) {

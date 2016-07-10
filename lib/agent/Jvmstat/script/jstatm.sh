@@ -1,8 +1,9 @@
 #!/bin/sh
 
-CLASSPATH=.:"$JAVA_HOME"/lib/tools.jar; export CLASSPATH
+JAVA_HOME=/usr/lib/jvm/java; export JAVA_HOME
+CLASSPATH=.:"${JAVA_HOME}/lib/tools.jar"; export CLASSPATH
 BASEDIR=`dirname $0`; export BASEDIR
-export TARGET_DIR="$BASEDIR"/lib
+TARGET_DIR="${BASEDIR}/lib"; export TARGET_DIR
 
 OLDIFS=${IFS}
 IFS=''
@@ -13,5 +14,5 @@ do
 fi
 done
 IFS=${OLDIFS}
-java JStatm $1 $2 $3 $4 $5
+$JAVA_HOME/bin/java JStatm $1 $2 $3 $4 $5 $6 $7 $8 $9
 

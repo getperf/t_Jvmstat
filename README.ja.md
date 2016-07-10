@@ -25,6 +25,17 @@ Jvmstat モニタリング
 | lib/cacti/template/0.8.8g/        | xmlファイル              | Cactiテンプレートエクスポートファイル |
 | script/                           | create_graph_template.sh | グラフテンプレート登録スクリプト      |
 
+メトリック
+-----------
+
+パフォーマンス統計グラフなどの監視項目定義は以下の通りです。
+
+|          Key           |              Description              |
+|------------------------|---------------------------------------|
+| **パフォーマンス統計** | **JavaVM ヒープ使用率、GC統計グラフ** |
+| jstat                  | **ヒープ使用量**<br> Heap usage       |
+|                        | **GC統計**<br> GC 回数 / GC ビジー率  |
+
 Install
 =====
 
@@ -42,7 +53,7 @@ Git Hub からプロジェクトをクローンします
 
 Cacti グラフテンプレート作成スクリプトを順に実行します
 
-	./script/create_graph_template.sh
+	./script/create_graph_template__Jvmstat.sh
 
 Cacti グラフテンプレートをファイルにエクスポートします
 
@@ -59,7 +70,7 @@ Jvmstat テンプレートのインポート
 監視サイト上で以下のコマンドを用いてインポートします
 
 	cd {モニタリングサイトホーム}
-	sumup --import=Jvmstat --archive=$GETPERF_HOME/var/template/archive/config-Jvmstat.tar.gz
+	tar xvf $GETPERF_HOME/var/template/archive/config-Jvmstat.tar.gz
 
 Cacti グラフテンプレートをインポートします。
 
@@ -68,6 +79,14 @@ Cacti グラフテンプレートをインポートします。
 インポートした集計スクリプトを反映するため、集計デーモンを再起動します
 
 	sumup restart
+
+jstatmコンパイル
+--------------------
+
+jvmstat API を用いた、Java アプリを使用します。Java 実行環境に応じて、Javaアプリをコンパイルしてください。
+コンパイルの詳細は、以下 README を参照してください。
+
+	lib/agent/Jvmstat/src/jstat/README.md
 
 使用方法
 =====
@@ -80,11 +99,36 @@ Cacti グラフテンプレートをインポートします。
 	cd {サイトホーム}/lib/agent/Jvmstat/
 	scp -rp * {監視対象サーバユーザ}@{監視対象サーバ}@~/ptune/
 
+採取スクリプトjstatm.sh 内の JAVA_HOME 環境変数の設定を編集します。実行環境に合わせてパスをしてください。
+
+* Linux の場合
+
+script/jstatm.sh　スクリプト内の以下の行を編集します。
+
+```
+grep JAVA_HOME= ~/ptune/script/jstatm.sh
+JAVA_HOME=/usr/lib/jvm/java; export JAVA_HOME
+```
+
+* Windows の場合
+
+script/jstatm.bat　スクリプト内の以下の行を編集します。
+
+```
+grep JAVA_HOME= ~/ptune/script/jstatm.bat
+set JAVA_HOME=C:\jdk1.7.0_79
+```
+
+設定を反映するためエージェントを再起動します。
+
+	~/ptune/bin/getperfctl stop
+	~/ptune/bin/getperfctl start
+
 データ集計のカスタマイズ
 --------------------
 
 上記エージェントセットアップ後、データ集計が実行されると、サイトホームディレクトリの lib/Getperf/Command/Master/ の下に Jvmstat.pm ファイルが生成されます。
-本ファイルは監視対象ストレージのマスター定義ファイルで、Java VMインスタンス の用途を記述します。
+本ファイルは監視対象のJava VM インスタンスのマスター定義ファイルで、Java VMインスタンス の用途を記述します。
 同ディレクトリ下の Jvmstat.pm_sample を例にカスタマイズしてください。
 
 グラフ登録
