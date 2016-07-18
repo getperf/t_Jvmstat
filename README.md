@@ -4,12 +4,9 @@ Java VM statistics (Jvmstat) monitoring template
 Jvmstat monitoring
 -----------------
 
-Heap utilization of JavaVM instance on the local server, and then collect the GC statistics.
-
-**Notes**
-
-1. support the Java 1.5 or higher
-2. Collect the Java Virtual Machine (JVM) statistical information like as the command [jstat](https://docs.oracle.com/javase/jp/6/technotes/tools/share/jstat.html).
+* Heap utilization of JavaVM instance on the Linux or Windows server, and then collect the GC statistics.
+* Support the Java 1.5 or higher
+* Collect the Java Virtual Machine (JVM) statistical information using [jstat API](https://docs.oracle.com/javase/jp/6/technotes/tools/share/jstat.html).
 
 File organization
 -------
@@ -33,24 +30,34 @@ Build Jvmstat template
 
 Clone the project from Git Hub
 
-    (Git clone to project replication)
+```
+(Git clone to project replication)
+```
 
 Go to the project directory, - and the initialization of the site with the template option
 
-    cd t_Jvmstat
-    initsite --template.
+```
+cd t_Jvmstat
+initsite --template.
+```
 
 Run the Cacti graph templates created scripts in order
 
-    ./script/create_graph_template.sh
+```
+./script/create_graph_template.sh
+```
 
 Export the Cacti graph templates to file
 
-    cacti-cli --export Jvmstat
+```
+cacti-cli --export Jvmstat
+```
 
 Aggregate script, graph registration rules, and archive the export file set Cacti graph templates
 
-    sumup --export = Jvmstat --archive=$GETPERF_HOME/var/template/archive/config-Jvmstat.tar.gz
+```
+sumup --export = Jvmstat --archive=$GETPERF_HOME/var/template/archive/config-Jvmstat.tar.gz
+```
 
 Import of Jvmstat template
 ---------------------
@@ -58,16 +65,22 @@ Import of Jvmstat template
 Was created in the previous $ GETPERF_HOME / var / template / archive / config-Jvmstat.tar.gz becomes archive of Jvmstat template,
 Import using the following command on the monitoring site
 
-    cd {monitoring site home}
-    sumup --import=Jvmstat --archive=$GETPERF_HOME/var/template/archive/config-Jvmstat.tar.gz
+```
+cd {monitoring site home}
+sumup --import=Jvmstat --archive=$GETPERF_HOME/var/template/archive/config-Jvmstat.tar.gz
+```
 
 Import the Cacti graph templates.
 
-    cacti-cli --import Jvmstat
+```
+cacti-cli --import Jvmstat
+```
 
 To reflect the imported aggregate script, and then restart the counting daemon
 
-    sumup restart
+```
+sumup restart
+```
 
 How to use
 =====
@@ -77,8 +90,10 @@ Agent Setup
 
 The following agent collecting configuration file and copy it to the monitored server, please re-start the agent.
 
-    cd {site home}/lib/agent/Jvmstat/
-    scp -rp * {monitored server user}@{monitored server}@~/ptune/
+```
+cd {site home}/lib/agent/Jvmstat/
+scp -rp * {monitored server user}@{monitored server}@~/ptune/
+```
 
 Customization of data aggregation
 --------------------
@@ -93,7 +108,9 @@ Graph registration
 After the agent setup, and data aggregation is performed, site node definition file under the node of the home directory will be output.
 Specify the output file or directory and run the cacti-cli.
 
+```
 cacti-cli node/Jvmstat/{JavaVM instance}/
+```
 
 AUTHOR
 -----------
