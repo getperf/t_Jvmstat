@@ -17,15 +17,25 @@ sub read_java_vm_list {
     my ($self, $data_info) = @_;
 
     my $input_dir = $data_info->input_dir;
-	my $javavm_list_yaml = file($input_dir, 'java_vm_list.yaml')->slurp;
-	my $stat_yaml = YAML::Tiny->read_string($javavm_list_yaml);
 	my %jvms = ();
-	for my $java_info(@{$stat_yaml->[0]}) {
-		my $pid  = $java_info->{pid};
-	    if (my $info = alias_instance($java_info)) {
-		    $jvms{$pid} = $info;
-	    }
-	}
+    for my $jvms_file(qw/java_vm_list.yaml jvm.txt/) {
+		my $jvms_path = file($input_dir, $jvms_file);
+		next if (! -f $jvms_path);
+		my ($pid, $args);
+		my @jvms_lines = $jvms_path->slurp;
+		for my $line(@jvms_lines) {
+			if ($line=~/pid: (\d+)/) {
+				$pid = $1;
+			}
+			if ($line=~/hotspot\.vm\.args: (.+)$/ ||
+				$line=~/java\.rt\.vmArgs: (.+)$/) {
+				my $java_info = $1;
+			    if (my $info = alias_instance($java_info)) {
+				    $jvms{$pid} = $info;
+			    }
+			}
+		}
+    }
 	return \%jvms;
 }
 
@@ -51,11 +61,16 @@ sub parse {
 	open( IN, $data_info->input_file ) || die "@!";
 	while (my $line = <IN>) {
 		$line=~s/(\r|\n)*//g;			# trim return code
-		next if ($line=~/^Date/);		# skip header
-		my ($dt, $tm, $pid, $body) = split(' ', $line, 4);
-		$dt=~s/\//-/g;
-		$results{$pid}{$sec} = $body;
-		$sec += $step;
+		if ($line=~/^Date/) {
+			$sec += $step;
+			next;
+		}
+		if ($line=~/^\d/) {
+			my ($dt, $tm, $pid, @csvs) = split(' ', $line);
+			my $n_csvs = scalar(@csvs);
+			push(@csvs, 0) if ($n_csvs == 7); # Add Thread for Java1.4
+			$results{$pid}{$sec} = join(' ', @csvs);
+		}
 	}
 	close(IN);
 
