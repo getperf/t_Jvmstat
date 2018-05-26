@@ -11,7 +11,7 @@
 
     <target name="generate.jar" depends="clean">
         <mkdir dir="build/classes"/>
-        <javac srcdir="src" destdir="build/classes" source="1.5" target="1.5" />
+        <javac srcdir="src" destdir="build/classes" source="1.5" target="1.5" debug="on" optimize="off"/>
         <mkdir dir="dest/lib"/>
         <jar destfile="dest/lib/JStatm.jar" basedir="build/classes">
             <manifest>

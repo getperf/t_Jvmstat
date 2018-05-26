@@ -95,7 +95,7 @@ public class JStatm {
             String vmidString = "//" + vmid + "?mode=r";           
             VmIdentifier id = new VmIdentifier(vmidString);
             try {
-                vm = monitoredHost.getMonitoredVm(id, 0);
+                vm = monitoredHost.getMonitoredVm(id, 1000);
                 
                 report.println( new StringBuilder().append("\n- pid: ").append(vmid) );
                 for ( int i = 0; i < reportMetrics.length; i++ ) {
@@ -149,7 +149,7 @@ public class JStatm {
             this.debugLog("[reportJvmstat] id = " + id);
             try {
             	try {
-	                vm = monitoredHost.getMonitoredVm(id, 0);
+	                vm = monitoredHost.getMonitoredVm(id, 1000);
             	} catch (Exception e) {
             		continue;
             	}
@@ -158,10 +158,18 @@ public class JStatm {
                 ln.append(" ");
                 ln.append(jvmFormat(vmid, 5, true));
 
+                // List<Monitor> r = vm.findByPattern("");
+                // for (Monitor m : r) {
+                //     System.out.println(m.getName() + "\t" + m.getValue().toString());
+                // }
             	for ( int i = 0; i < statMetrics.length; i++ ) {
                     Monitor m = vm.findByName( statMetrics[i] );
                     ln.append(" ");
-                    ln.append( jvmFormat(m.getValue(), reportColumnSize[i], false) );
+                    if (m == null) {
+                        ln.append( jvmFormat(0, reportColumnSize[i], false) );
+                    } else {
+                        ln.append( jvmFormat(m.getValue(), reportColumnSize[i], false) );
+                    }
                 }
                 report.println( ln );
                 this.debugLog("[reportJvmstat] ln = " + ln);

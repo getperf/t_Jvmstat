@@ -10,9 +10,9 @@ Installation
 
 JDK1.5 or higher is required. If you use the JDK1.4, please refer to the [jstatm14].
 
-[Jstatm14]: https://github.com/frsw3nr/jstatm14
+[Jstatm14]: https://github.com/getperf/t_Jvmstat.git
 
-    git clone git@github.com:frsw3nr/jstatm.git
+    git clone https://github.com/getperf/t_Jvmstat.git
     cd jstatm
     ant
 
